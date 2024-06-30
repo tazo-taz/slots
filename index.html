@@ -1,0 +1,47 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  
+  <div class="header">
+    <div class="balance header-item">
+      <img src="images/money.svg" alt="coin" class="coin" />
+      <span></span>
+    </div>
+    
+    <div class="header-item deposit">
+      <img src="images/poker-chip.svg" alt="coin" class="coin" />
+      <span>Deposit</span>
+    </div>
+  </div>
+
+  <div id="app"></div>
+  <div class="settings">
+    <div class="with-title">
+      <h3>Bet amount</h3>
+      <input type="number" id="bet" value="100" with-dolar-sign data-counter data-counter-increment="50" />
+    </div>
+
+    <div class="with-title max-won">
+      <h3>Max won</h3>
+      <div class="input-style" with-dolar-sign id="max-won">
+        200
+      </div>
+    </div>
+
+    <button class="secondary lg spin">Spin</button>
+  </div>
+
+  <script src="js/pixi.min.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/modal.js"></script>
+  <script src="js/slot-machine.js"></script>
+  <script src="js/script.js"></script>
+  <script src="js/inputs.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,264 @@
+:root {
+  --input-sm-size: 25px;
+  --input-size: 45px;
+  --input-lg-size: 60px;
+  --primary: #ffde15;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 40px;
+  background-color: #313131;
+  height: 100vh;
+}
+
+canvas {
+  border: 10px solid #c7b02f;
+  border-radius: 10px;
+}
+
+button {
+  height: var(--input-size);
+  background: var(--primary);
+  border: 2px solid #d5b700;
+  border-radius: 7px;
+  color: #676767;
+  box-shadow: 0 0 3px #00000052;
+  cursor: pointer;
+  padding: 0 10px;
+}
+
+button.icon {
+  font-size: 35px;
+  aspect-ratio: 1/1;
+}
+
+button.secondary {
+  background: linear-gradient(#4ED252 50%, #018202 50%);
+  border-color: #018202;
+  color: white;
+  padding: 0 10px;
+  font-size: 22px;
+}
+
+button:disabled {
+  background: linear-gradient(#9c9c9c 50%, #676767 50%);
+  background-color: #676767;
+  border-color: #676767;
+  color: white;
+}
+
+button.lg {
+  height: var(--input-lg-size);
+  padding: 0 20px;
+  font-size: 26px;
+  --translateY: 2px;
+}
+
+button.sm {
+  height: var(--input-sm-size);
+  padding: 0;
+  font-size: 17px !important;
+}
+
+button:not(:disabled):active {
+  transform: translateY(var(--translateY, 1px));
+  box-shadow: 0 0 3px #00000052 inset;
+}
+
+input,
+.input-style {
+  height: var(--input-size);
+  width: 140px;
+  text-align: center;
+  border: 2px solid transparent;
+  border-radius: 7px;
+  box-shadow: inset 0 0 3px rgb(44, 44, 44);
+  background: #1a1a1a;
+  text-align: left;
+  padding-left: 5px;
+  transition: border 0.3s;
+  color: white;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+}
+
+*:has(.dollar-sign)>input,
+*:has(.dollar-sign)>.input-style {
+  padding-left: 23px;
+}
+
+input:focus,
+input.active {
+  outline: none;
+  border: 2px solid var(--primary);
+}
+
+.input-container {
+  position: relative;
+  font-size: 20px;
+}
+
+.input-container .dollar-sign {
+  content: "$";
+  color: white;
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  transition: 0.3s;
+}
+
+.input-container input:focus+.dollar-sign,
+.input-container input.active+.dollar-sign {
+  color: var(--primary);
+}
+
+.settings {
+  display: flex;
+  gap: 50px;
+}
+
+.with-title {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.with-title h3 {
+  color: white;
+  margin-bottom: 6px;
+}
+
+.counter {
+  display: flex;
+  gap: 13px;
+  justify-content: center;
+  align-items: center;
+}
+
+.header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.header-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  color: white;
+  font-size: 28px;
+}
+
+.deposit {
+  cursor: pointer;
+}
+
+.header-item img {
+  width: 38px;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 99;
+
+}
+
+.modal-content {
+  background: #1a1a1a;
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #00000052;
+  position: fixed;
+  z-index: 100;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.modal-content h2 {
+  color: white;
+  margin-bottom: 10px;
+}
+
+.modal-content p {
+  color: white;
+}
+
+.modal-content button {
+  margin-top: 10px;
+}
+
+.modal-content .close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  color: white;
+  font-size: 30px;
+}
+
+/* 
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 99;
+} */
+
+@media (min-width: 630px) {
+  .spin {
+    align-self: end;
+  }
+}
+
+@media (max-width: 630px) {
+  .settings {
+    flex-direction: column;
+  }
+
+  .max-won .input-container,
+  .max-won .input-style {
+    width: 100%;
+  }
+
+  .settings {
+    gap: 25px;
+  }
+}
