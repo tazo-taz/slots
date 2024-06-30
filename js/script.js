@@ -9,13 +9,18 @@ const maxWon = document.querySelector("#max-won");
   const app = new Application()
 
   const ratio = 5 / 3
-  const initialWidth = 800
+  const initialWidth = 1000
   const width = initialWidth > window.innerWidth ? window.innerWidth : initialWidth
 
   await app.init({
     width: width,
     height: width / ratio,
   })
+
+  if (initialWidth > window.innerWidth) {
+    app.view.style.width = window.innerWidth + 'px';
+    app.view.style.height = window.innerWidth / ratio + 'px';
+  }
 
   document.querySelector("#app").appendChild(app.view)
 
@@ -44,14 +49,18 @@ const maxWon = document.querySelector("#max-won");
     game.deposit()
   })
 
-  game.on('gameEnd', (winning) => {
+  game.on('gameEnd', (meta) => {
     spinBtn.disabled = false
     enableCounter("#bet")
-    if (winning) {
-      const { money } = winning
+    if (meta) {
+      const { money, winners } = meta
       createModal({
         title: "Congratulations!",
-        text: `You won $${money}`,
+        text: `You won $${money} <br />
+        <div class="modal-slot-icons">
+        ${winners.map(winner => `<img src="./images/icons/${winner}.png" alt="${winner}" />`).join('')}
+        </div>
+        `,
       })
     }
   })

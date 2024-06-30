@@ -5,7 +5,7 @@ class SlotMachine {
   static reelsCount = 5;
   static itemsInReel = 3;
   static rollSpeedDelta = 0.05;
-  static reelMaxSpeed = 4;
+  static reelMaxSpeed = 20;
   static reelCircleCount = 4;
 
   #_balance = +localStorage.getItem('balance') || 10000;
@@ -251,6 +251,7 @@ class SlotMachine {
     for (let index in this.reelsContainer.children) {
       const reel = this.reelsContainer.children[index]
       if (!reel.playing || reel.circle > (SlotMachine.reelCircleCount + +index)) {
+        if (reel.y !== 0) reel.y = 0
         continue
       }
       playingReels++
@@ -265,7 +266,7 @@ class SlotMachine {
       if (reel.speed == reel.max_speed && !reel.isChanged && reel.y <= this.size * SlotMachine.itemsInReel * -1 && reel.y >= this.size * SlotMachine.itemsInReel * -2 && this.reelsContainer.combination) {
         reel.isChanged = true
         let x = +index
-        for (let y = 0; y < this.reelsContainer.combination.filter(a => typeof a !== "function").length; y++) {
+        for (let y = 0; y < this.reelsContainer.combination.filter(Array.isArray).length; y++) {
           const icon = this.reelsContainer.combination[y][x];
           let texture = this.getTextureByName(icon)
           const sprite1 = this.reelsContainer.children[x].children[y]
@@ -284,17 +285,19 @@ class SlotMachine {
         }
       }
     }
+
     if (playingReels === 0 && this.isPlaying) {
       if (!this.reelsContainer.combination) return;
       this.stopPlaying()
       if (this.#winning) {
         let won = 0
-        const func = this.reelsContainer.combination.at(-1)
-        if (typeof func === 'function') {
-          won = func(this.#currentBet)
+        const meta = this.reelsContainer.combination.at(-1)
+        if (meta?.onWin) {
+          won = meta.onWin(this.#currentBet)
         }
         this.#callbacks['gameEnd']?.forEach(cb => cb({
-          money: won
+          money: won,
+          winners: meta?.winners || []
         }))
         if (this.maxWon < won) {
           this.updateMaxWon(won)
@@ -303,8 +306,6 @@ class SlotMachine {
       } else {
         this.#callbacks['gameEnd']?.forEach(cb => cb())
       }
-
-      console.log();
     }
   }
 

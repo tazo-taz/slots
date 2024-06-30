@@ -8,35 +8,35 @@ const winningSituations = [
     ["apple", "apple", "apple", "ruby", "triple7"],
     ["banana", "bell", "grape", "apple", "ruby"],
     ["apple", "apple", "apple", "ruby", "triple7"],
-    (bet) => bet * 10
+    { onWin: (bet) => bet * 10, winners: ["apple"] }
   ],
   // 3 triple7s in a row - win $20, 3 bells in a row - win $5
   [
     ["triple7", "triple7", "triple7", "grape", "apple"],
     ["bell", "coins", "coins", "coins", "cherry"],
     ["bell", "bell", "bell", "ruby", "cherry"],
-    (bet) => bet * 20 + bet * 5
+    { onWin: (bet) => bet * 20 + bet * 5, winners: ["777", "bell"] }
   ],
   // 3 apples in a row - win $10
   [
     ["grape", "ruby", "grape", "triple7", "strawberry"],
     ["banana", "apple", "apple", "apple", "cherry"],
     ["grape", "banana", "banana", "bell", "bell"],
-    (bet) => bet * 10
+    { onWin: (bet) => bet * 10, winners: ["apple"] }
   ],
   // 3 cherries in a row - win $7
   [
     ["cherry", "cherry", "cherry", "grape", "coins"],
     ["banana", "bell", "grape", "apple", "ruby"],
     ["apple", "banana", "grape", "triple7", "apple"],
-    (bet) => bet * 7
+    { onWin: (bet) => bet * 7, winners: ["cherry"] }
   ],
   // 3 rubies in a row - win $15, 3 bells in a row - win $5
   [
     ["ruby", "ruby", "ruby", "banana", "coins"],
     ["bell", "bell", "bell", "apple", "ruby"],
     ["apple", "grape", "banana", "cherry", "strawberry"],
-    (bet) => bet * 15 + bet * 5
+    { onWin: (bet) => bet * 15 + bet * 5, winners: ["ruby", "bell"] }
   ]
 ];
 
