@@ -33,5 +33,8 @@ This task involves developing a slot game using PixiJS. The game should be inter
 ### Main Image
 ![Main Image](https://i.ibb.co/Jz6WBPC/Untitled.png)
 
+### Main Image with opened sidebar
+![Main Image with opened sidebar](https://i.ibb.co/y6b6Pps/Untitled3.png)
+
 ### Mobile Version
 ![Mobile Version](https://i.ibb.co/4Mjpx2k/Untitled2.png)
