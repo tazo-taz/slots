@@ -39,6 +39,7 @@ body {
   gap: 40px;
   background-color: var(--dark);
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 canvas {
