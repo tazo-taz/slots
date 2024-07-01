@@ -305,6 +305,7 @@ input.active {
 .history-items {
   flex: 1;
   overflow-y: auto;
+  color: white;
 }
 
 .drawer-hidden {
@@ -396,6 +397,11 @@ input.active {
 }
 
 @media (max-width: 630px) {
+  .history-title {
+    text-align: center;
+    color: white;
+  }
+
   #app {
     margin-top: 140px;
   }
