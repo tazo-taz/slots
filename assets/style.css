@@ -38,7 +38,7 @@ body {
   flex-direction: column;
   gap: 40px;
   background-color: var(--dark);
-  height: 100vh;
+  min-height: 100vh;
 }
 
 canvas {
@@ -284,7 +284,7 @@ input.active {
   position: fixed;
   top: 0;
   left: 0;
-  max-width: 350px;
+  max-width: 400px;
   width: 100%;
   height: 100vh;
   background: var(--darker);
@@ -296,7 +296,13 @@ input.active {
   flex-direction: column;
 }
 
-.drawer-items {
+.history-item img {
+  width: 25px;
+  margin: 0 2px;
+  border-radius: 3px;
+}
+
+.history-items {
   flex: 1;
   overflow-y: auto;
 }
@@ -317,19 +323,20 @@ input.active {
   color: var(--primary);
 }
 
-.drawer-item {
+.history-item {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   padding: 15px 0;
   text-align: center;
   background-color: var(--dark-red);
+  align-items: center;
 }
 
-.drawer-item-won {
+.history-item-won {
   background-color: var(--dark-green);
 }
 
-.drawer-item-header {
+.history-item-header {
   background: var(--primary);
   color: var(--light-dark);
   margin-top: 15px;
@@ -353,7 +360,7 @@ input.active {
   right: 20px;
 }
 
-.drawer-content .drawer-title {
+.history-title {
   padding: 20px;
   padding-bottom: 10px;
 }
@@ -382,9 +389,21 @@ input.active {
   .spin {
     align-self: end;
   }
+
+  .history-mobile-items {
+    display: none;
+  }
 }
 
 @media (max-width: 630px) {
+  #app {
+    margin-top: 140px;
+  }
+
+  .header-left .menu {
+    display: none;
+  }
+
   .settings {
     flex-direction: column;
   }

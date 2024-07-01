@@ -7,7 +7,26 @@ const menuEl = document.querySelector(".menu")
 const drawerEl = document.querySelector(".drawer");
 const drawerCloseEl = document.querySelector(".drawer-content .content-close")
 const drawerOverlayEl = document.querySelector(".drawer .overlay")
-const drawerItemsEl = document.querySelector(".drawer-items")
+
+const insertHistoryElements = (selector) => {
+  const html = `
+    <h2 class="history-title">YOUR HISTORY</h2>
+      <div class="history-item history-item-header">
+        <span>Bet</span>
+        <span>Winners</span>
+        <span>Result</span>
+        <span>Balance</span>
+        <span>Date</span>
+      </div>
+      <div class="history-items">
+      </div>
+  `
+
+  document.querySelector(selector).innerHTML = html
+}
+
+insertHistoryElements(".drawer-items")
+insertHistoryElements(".history-mobile-items")
 
 menuEl.onclick = () => {
   drawerEl.classList.toggle("drawer-hidden")
@@ -53,14 +72,18 @@ drawerOverlayEl.onclick = () => {
     let html = ""
     console.log(game.history);
     game.history.forEach((item) => {
-      html += `<div class="drawer-item ${item.moneyWon > 0 ? "drawer-item-won" : ""}">
+      console.log(item);
+      html += `<div class="history-item ${item.moneyWon > 0 ? "history-item-won" : ""}">
     <div>$${item.bet}</div>
+    <div>
+    ${item.winners?.map(winner => `<img src="./assets/images/icons/${winner}.png" alt="${winner}" />`).join('') || ""}
+    </div>
     <div>$${item.moneyWon}</div>
     <div>$${item.balance}</div>
     <div>${item.date}</div>
     </div>`
-    })
-    drawerItemsEl.innerHTML = html
+    });
+    [...document.querySelectorAll(".history-items")].forEach(el => el.innerHTML = html)
   }
 
   updateDrawerHistory()

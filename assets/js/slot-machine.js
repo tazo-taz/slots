@@ -4,9 +4,9 @@ class SlotMachine {
   static primaryColor = 0x1099bb;
   static reelsCount = 5;
   static itemsInReel = 3;
-  static rollSpeedDelta = 0.07;
-  static reelMaxSpeed = 20;
-  static reelCircleCount = 4;
+  static rollSpeedDelta = window.innerWidth > 1000 ? 0.07 : 0.02;
+  static reelMaxSpeed = window.innerWidth > 1000 ? 20 : 6;
+  static reelCircleCount = window.innerWidth > 1000 ? 4 : 6;
   static depositAmount = 100;
 
   #_balance = +localStorage.getItem('balance') || SlotMachine.depositAmount * 10;
@@ -185,14 +185,15 @@ class SlotMachine {
     localStorage.setItem('maxWon', this.#_maxWon)
   }
 
-  #updateHistory({ money }) {
+  #updateHistory({ money, ...rest }) {
     const oldHistory = this.history
 
     oldHistory.push({
       bet: this.#currentBet,
       moneyWon: money,
       date: new Date().toLocaleDateString(),
-      balance: this.balance
+      balance: this.balance,
+      ...rest
     })
 
     localStorage.setItem("slots-history", JSON.stringify(oldHistory))
@@ -347,6 +348,7 @@ class SlotMachine {
       }
       this.#updateHistory({
         money: won,
+        winners: meta?.winners || []
       })
       this.#callbacks['gameEnd']?.forEach(cb => cb({
         money: won,
