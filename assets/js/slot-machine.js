@@ -4,11 +4,12 @@ class SlotMachine {
   static primaryColor = 0x1099bb;
   static reelsCount = 5;
   static itemsInReel = 3;
-  static rollSpeedDelta = 0.05;
+  static rollSpeedDelta = 0.07;
   static reelMaxSpeed = 20;
   static reelCircleCount = 4;
+  static depositAmount = 100;
 
-  #_balance = +localStorage.getItem('balance') || 10000;
+  #_balance = +localStorage.getItem('balance') || SlotMachine.depositAmount * 10;
   #_maxWon = +localStorage.getItem('maxWon') || 0;
   #winning = false;
   #callbacks = {};
@@ -26,12 +27,18 @@ class SlotMachine {
     return this.#_maxWon
   }
 
+  get history() {
+    return JSON.parse(localStorage.getItem("slots-history") || "[]")
+  }
+
   get size() {
     return this.app.screen.width / SlotMachine.reelsCount
   }
 
   deposit() {
-    this.updateBalance(10000)
+    this.#updateBalance(SlotMachine.depositAmount)
+    this.cashAudio.currentTime = 0
+    this.cashAudio.play()
   }
 
   loadAssets = async () => {
@@ -47,15 +54,15 @@ class SlotMachine {
       strawberryIcon
     ] =
       await Promise.all([
-        Assets.load("./images/icons/777.png"),
-        Assets.load("./images/icons/apple.png"),
-        Assets.load("./images/icons/banana.png"),
-        Assets.load("./images/icons/bell.png"),
-        Assets.load("./images/icons/cherry.png"),
-        Assets.load("./images/icons/coins.png"),
-        Assets.load("./images/icons/grape.png"),
-        Assets.load("./images/icons/ruby.png"),
-        Assets.load("./images/icons/strawberry.png")
+        Assets.load("./assets/images/icons/777.png"),
+        Assets.load("./assets/images/icons/apple.png"),
+        Assets.load("./assets/images/icons/banana.png"),
+        Assets.load("./assets/images/icons/bell.png"),
+        Assets.load("./assets/images/icons/cherry.png"),
+        Assets.load("./assets/images/icons/coins.png"),
+        Assets.load("./assets/images/icons/grape.png"),
+        Assets.load("./assets/images/icons/ruby.png"),
+        Assets.load("./assets/images/icons/strawberry.png")
       ]);
 
     this.t7Icon = t7Icon
@@ -67,6 +74,23 @@ class SlotMachine {
     this.grapeIcon = grapeIcon
     this.rubyIcon = rubyIcon
     this.strawberryIcon = strawberryIcon
+
+    const winAudio = new Audio('./assets/audios/win.wav');
+    const rollingAudio = new Audio('./assets/audios/rolling.mp3');
+    const cashAudio = new Audio('./assets/audios/cash.mp3');
+    const loseAudio = new Audio('./assets/audios/lose.mp3');
+
+    await Promise.all([
+      winAudio.load(),
+      rollingAudio.load(),
+      cashAudio.load(),
+      loseAudio.load()
+    ]);
+
+    this.winAudio = winAudio
+    this.rollingAudio = rollingAudio
+    this.cashAudio = cashAudio
+    this.loseAudio = loseAudio
   }
 
   get icons() {
@@ -81,10 +105,6 @@ class SlotMachine {
       this.rubyIcon,
       this.strawberryIcon
     ]
-  }
-
-  get margin() {
-    return (this.app.screen.height - (this.size * SlotMachine.itemsInReel)) / 2
   }
 
   createReels = () => {
@@ -153,16 +173,29 @@ class SlotMachine {
     }
   }
 
-  updateBalance = (value) => {
+  #updateBalance(value) {
     this.#_balance += value
     this.#callbacks['balanceChange']?.forEach(cb => cb())
     localStorage.setItem('balance', this.#_balance)
   }
 
-  updateMaxWon = (value) => {
+  #updateMaxWon(value) {
     this.#_maxWon = value
     this.#callbacks['maxWinReached']?.forEach(cb => cb(value))
     localStorage.setItem('maxWon', this.#_maxWon)
+  }
+
+  #updateHistory({ money }) {
+    const oldHistory = this.history
+
+    oldHistory.push({
+      bet: this.#currentBet,
+      moneyWon: money,
+      date: new Date().toLocaleDateString(),
+      balance: this.balance
+    })
+
+    localStorage.setItem("slots-history", JSON.stringify(oldHistory))
   }
 
   spin(bet) {
@@ -180,8 +213,15 @@ class SlotMachine {
 
     this.reelsContainer.combination = null
     this.#winning = false
-    this.updateBalance(-bet)
+    this.#updateBalance(-bet)
     this.#currentBet = bet
+
+    this.winAudio.pause()
+    this.loseAudio.pause()
+
+    this.rollingAudio.loop = true
+    this.rollingAudio.play()
+    this.rollingAudio.currentTime = 0
 
     for (let index in this.reelsContainer.children) {
       const reel = this.reelsContainer.children[index]
@@ -281,32 +321,54 @@ class SlotMachine {
       if (reel.y <= -reel.height / 2) {
         if (this.reelsContainer.combination) {
           reel.circle++
-          reel.y = Math.round(reel.y % (reel.height / 2))
+          if (reel.circle > (SlotMachine.reelCircleCount + +index)) {
+            reel.y = 0
+          } else {
+            reel.y = Math.round(reel.y % (reel.height / 2))
+          }
+
         }
       }
     }
 
     if (playingReels === 0 && this.isPlaying) {
-      if (!this.reelsContainer.combination) return;
-      this.stopPlaying()
-      if (this.#winning) {
-        let won = 0
-        const meta = this.reelsContainer.combination.at(-1)
-        if (meta?.onWin) {
-          won = meta.onWin(this.#currentBet)
-        }
-        this.#callbacks['gameEnd']?.forEach(cb => cb({
-          money: won,
-          winners: meta?.winners || []
-        }))
-        if (this.maxWon < won) {
-          this.updateMaxWon(won)
-        }
-        this.updateBalance(won)
-      } else {
-        this.#callbacks['gameEnd']?.forEach(cb => cb())
-      }
+      this.#handleFinishRoll()
     }
+  }
+
+  #handleFinishRoll() {
+    if (!this.reelsContainer.combination) return;
+    this.stopPlaying()
+    if (this.#winning) {
+      let won = 0
+      const meta = this.reelsContainer.combination.at(-1)
+      if (meta?.onWin) {
+        won = meta.onWin(this.#currentBet)
+      }
+      this.#updateHistory({
+        money: won,
+      })
+      this.#callbacks['gameEnd']?.forEach(cb => cb({
+        money: won,
+        winners: meta?.winners || []
+      }))
+      if (this.maxWon < won) {
+        this.#updateMaxWon(won)
+      }
+      this.#updateBalance(won)
+
+      this.winAudio.currentTime = 0
+      this.winAudio.play()
+    } else {
+      this.#updateHistory({
+        money: 0,
+      })
+      this.#callbacks['gameEnd']?.forEach(cb => cb())
+
+      this.loseAudio.currentTime = 0
+      this.loseAudio.play()
+    }
+    this.rollingAudio.pause()
   }
 
   get isPlaying() {
@@ -320,5 +382,4 @@ class SlotMachine {
     this.#callbacks[event] ||= []
     this.#callbacks[event].push(cb)
   }
-
 }

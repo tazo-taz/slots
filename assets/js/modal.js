@@ -5,21 +5,21 @@ const createModal = ({
   const modal = document.createElement("div")
   modal.style = "position: fixed"
   modal.innerHTML = `
-    <div class="modal-overlay"></div>
+    <div class="overlay"></div>
     <div class="modal-content">
-      <button class="close sm icon">&times;</button>
+      <button class="content-close sm icon">&times;</button>
       <h2>${title}</h2>
       <p>${text}</p>
     </div>
   `
   document.body.appendChild(modal)
 
-  const close = modal.querySelector(".close")
+  const close = modal.querySelector(".content-close")
   close.addEventListener("click", () => {
     modal.remove()
   })
 
-  const modalOverlay = modal.querySelector(".modal-overlay")
+  const modalOverlay = modal.querySelector(".overlay")
   modalOverlay.addEventListener("click", () => {
     modal.remove()
   })

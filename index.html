@@ -3,9 +3,26 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
-  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./assets/style.css">
 </head>
 <body>
+
+  <div class="drawer drawer-hidden">
+    <div class="overlay"></div>
+    <div class="drawer-content">
+      <button class="content-close sm icon">&times;</button>
+      <h2 class="drawer-title">YOUR HISTORY</h2>
+      <div class="drawer-item drawer-item-header">
+        <span>Bet</span>
+        <span>Result</span>
+        <span>Balance</span>
+        <span>Date</span>
+      </div>
+      <div class="drawer-items">
+      </div>
+    </div>
+
+  </div>
   
   <div class="header">
     <div class="header-left">
@@ -15,13 +32,13 @@
         <span></span>
       </div>
       <div class="balance header-item">
-        <img src="images/money.svg" alt="coin" class="coin" />
+        <img src="./assets/images/money.svg" alt="coin" class="coin" />
         <span></span>
       </div>
     </div>
     
     <div class="header-item deposit">
-      <img src="images/poker-chip.svg" alt="coin" class="coin" />
+      <img src="./assets/images/poker-chip.svg" alt="coin" class="coin" />
       <span>Deposit</span>
     </div>
   </div>
@@ -30,7 +47,7 @@
   <div class="settings">
     <div class="with-title">
       <h3>Bet amount</h3>
-      <input type="number" id="bet" value="100" with-dolar-sign data-counter data-counter-increment="50" />
+      <input type="number" id="bet" value="25" with-dolar-sign data-counter data-counter-increment="25" />
     </div>
 
     <div class="with-title max-won">
@@ -43,12 +60,12 @@
     <button class="secondary lg spin">Spin</button>
   </div>
 
-  <script src="js/pixi.min.js"></script>
-  <script src="js/common.js"></script>
-  <script src="js/modal.js"></script>
-  <script src="js/slot-machine.js"></script>
-  <script src="js/script.js"></script>
-  <script src="js/inputs.js"></script>
+  <script src="./assets/js/pixi.min.js"></script>
+  <script src="./assets/js/common.js"></script>
+  <script src="./assets/js/modal.js"></script>
+  <script src="./assets/js/slot-machine.js"></script>
+  <script src="./assets/js/script.js"></script>
+  <script src="./assets/js/inputs.js"></script>
 
 </body>
 </html>

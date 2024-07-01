@@ -3,6 +3,23 @@ const balanceSpan = document.querySelector(".balance span");
 const betInput = document.querySelector("#bet");
 const depositBtn = document.querySelector(".deposit");
 const maxWon = document.querySelector("#max-won");
+const menuEl = document.querySelector(".menu")
+const drawerEl = document.querySelector(".drawer");
+const drawerCloseEl = document.querySelector(".drawer-content .content-close")
+const drawerOverlayEl = document.querySelector(".drawer .overlay")
+const drawerItemsEl = document.querySelector(".drawer-items")
+
+menuEl.onclick = () => {
+  drawerEl.classList.toggle("drawer-hidden")
+};
+
+drawerCloseEl.onclick = () => {
+  drawerEl.classList.toggle("drawer-hidden")
+};
+
+drawerOverlayEl.onclick = () => {
+  drawerEl.classList.toggle("drawer-hidden")
+};
 
 (async () => {
   const { Application } = PIXI
@@ -30,6 +47,24 @@ const maxWon = document.querySelector("#max-won");
   maxWon.innerHTML = game.maxWon
   await game.init()
 
+
+
+  const updateDrawerHistory = () => {
+    let html = ""
+    console.log(game.history);
+    game.history.forEach((item) => {
+      html += `<div class="drawer-item ${item.moneyWon > 0 ? "drawer-item-won" : ""}">
+    <div>$${item.bet}</div>
+    <div>$${item.moneyWon}</div>
+    <div>$${item.balance}</div>
+    <div>${item.date}</div>
+    </div>`
+    })
+    drawerItemsEl.innerHTML = html
+  }
+
+  updateDrawerHistory()
+
   addEventListener('resize', () => {
     if (initialWidth > window.innerWidth) {
       app.view.style.width = window.innerWidth + 'px';
@@ -47,6 +82,10 @@ const maxWon = document.querySelector("#max-won");
 
   depositBtn.addEventListener('click', () => {
     game.deposit()
+    createModal({
+      title: "Deposit",
+      text: `You have successfully deposited <span class="color-primary">$${SlotMachine.depositAmount}</span>`
+    })
   })
 
   game.on('gameEnd', (meta) => {
@@ -58,11 +97,12 @@ const maxWon = document.querySelector("#max-won");
         title: "Congratulations!",
         text: `You won $${money} <br />
         <div class="modal-slot-icons">
-        ${winners.map(winner => `<img src="./images/icons/${winner}.png" alt="${winner}" />`).join('')}
+        ${winners.map(winner => `<img src="./assets/images/icons/${winner}.png" alt="${winner}" />`).join('')}
         </div>
         `,
       })
     }
+    updateDrawerHistory()
   })
 
   game.on('balanceChange', () => {

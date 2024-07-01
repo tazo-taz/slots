@@ -32,7 +32,7 @@
 
   plusButton.addEventListener("click", () => {
     temporarySetActive()
-    input.value = parseInt(input.value) + increment
+    input.value = (parseInt(input.value) || 0) + increment
   })
 
   input.parentElement.insertBefore(div, input)
