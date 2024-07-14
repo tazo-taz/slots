@@ -1,4 +1,4 @@
-# Game Front-end Task
+# Slots game
 
 ## Description
 
